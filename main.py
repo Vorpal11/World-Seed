@@ -3,30 +3,63 @@ import pygame
 import time
 import os
 import random
+import math
 
-ASSETS = [
-    pygame.image.load(os.path.join("Assets", "LightDirt.png")),
-    pygame.image.load(os.path.join("Assets", "DarkDirt.png")),
-    pygame.image.load(os.path.join("Assets", "LighGrass.png")),
-    pygame.image.load(os.path.join("Assets", "DarkGrass.png")),
-    pygame.image.load(os.path.join("Assets", "LightWater.png")),
-    pygame.image.load(os.path.join("Assets", "Valley.png")),
-    pygame.image.load(os.path.join("Assets", "Rabbit.png")),
-    pygame.image.load(os.path.join("Assets", "foxidle1.png"))
-]
+from constants import ASSETS, WIDTH, HEIGHT, GRIDSIZE
+from creatures import *
+from grass import *
 
-map = Map()
-map.generate_valleys()
-map.generate_lakes()
-win = pygame.display.set_mode((800, 800))
-map.draw(win)
+win = pygame.display.set_mode(
+    (WIDTH, HEIGHT), pygame.DOUBLEBUF, 32)
 clock = pygame.time.Clock()
-run = True
-while run:
-    clock.tick(60)
-    pygame.display.update()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-            pygame.quit()
-            quit()
+
+
+def draw_window(win):
+    for h in range(HEIGHT):
+        for w in range(WIDTH):
+            win.blit(ASSETS[0], (w * GRIDSIZE, h * GRIDSIZE))
+
+
+def main():
+    run = True
+    rabbits = []
+    foxs = []
+    grasses = []
+    grass_location = []
+    for i in range(WIDTH // GRIDSIZE):
+        rabbits.append(Rabbit(random.randrange(0, WIDTH // GRIDSIZE) *
+                              GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+        foxs.append(Fox(random.randrange(0, WIDTH // GRIDSIZE) *
+                        GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+        grasses.append(Grass(random.randrange(0, WIDTH // GRIDSIZE) *
+                             GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+        grass_location.append((grasses[i].x, grasses[i].y))
+    while run:
+        clock.tick(10)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run == False
+                pygame.quit()
+                quit()
+        draw_window(win)
+        for grass in grasses:
+            if len(grass_location) < 1000:
+                x, y = grass.reproduce(grass_location)
+                if (x, y) != (-1, -1):
+                    grasses.append(Grass(x, y))
+                    grass_location.append((x, y))
+        for grass in grasses:
+            grass.draw(win)
+
+        for rabbit in rabbits:
+            rabbit.move(random.randrange(-2, 3))
+            rabbit.draw(win)
+
+        for fox in foxs:
+            fox.move(random.randrange(-2, 3))
+            fox.draw(win)
+
+        pygame.display.update()
+
+
+main()
