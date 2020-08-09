@@ -15,8 +15,8 @@ clock = pygame.time.Clock()
 
 
 def draw_window(win):
-    for h in range(HEIGHT):
-        for w in range(WIDTH):
+    for h in range(HEIGHT // GRIDSIZE):
+        for w in range(WIDTH // GRIDSIZE):
             win.blit(ASSETS[0], (w * GRIDSIZE, h * GRIDSIZE))
 
 
@@ -43,11 +43,10 @@ def main():
                 quit()
         draw_window(win)
         for grass in grasses:
-            if len(grass_location) < 1000:
-                x, y = grass.reproduce(grass_location)
-                if (x, y) != (-1, -1):
-                    grasses.append(Grass(x, y))
-                    grass_location.append((x, y))
+            x, y = grass.reproduce(grass_location)
+            if (x, y) != (-1, -1):
+                grasses.append(Grass(x, y))
+                grass_location.append((x, y))
         for grass in grasses:
             grass.draw(win)
 

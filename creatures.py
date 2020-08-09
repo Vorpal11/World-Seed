@@ -14,13 +14,14 @@ class Creatures:
     def move(self, dir):
         if self.reproduced <= 4:
             if dir == -2 and self.x > 0:
-                self.x -= GRIDSIZE
+                self.x -= 16
             elif dir == -1 and self.x < WIDTH - GRIDSIZE:
-                self.x += GRIDSIZE
+                self.x += 16
             elif dir == 1 and self.y > 0:
-                self.y -= GRIDSIZE
+                self.y += 16
             elif dir == 2 and self.y < HEIGHT - GRIDSIZE:
-                self.y += GRIDSIZE
+                self.y -= 16
+            return (self.x, self.y)
 
     def draw(self, win):
         win.blit(self.IMG, (self.x, self.y))
