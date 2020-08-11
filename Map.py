@@ -34,7 +34,7 @@ class Map:
             print(gridSquare)
             creature_list = gridSquare.get_creature_list()
             for i, creature in enumerate(creature_list):
-                location = creature.location.get_location()
+                location = creature.location
                 gridSquare.delete_creature(creature)
                 print(creature)
                 creature.move(Map.get_surrounding_squares(location))
@@ -130,10 +130,8 @@ class Map:
         # Check a 3x3 radius around the current square
         for i in [-2, -1, 0, 1, 2]:
             for j in [-2, -1, 0, 1, 2]:
-                location = initial_location[:]
-                location[0] += i
-                location[1] += j
-                square = Map.get_location(location[0], location[1])
+                location = initial_location + (i, j)
+                square = Map.get_location(location)
                 terrain = square.get_terrain().get_id()
                 # If about to touch a different type of terrain, return
                 if terrain not in [0, terrain_id]:
