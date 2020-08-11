@@ -51,7 +51,7 @@ def spawnCreatures():
 def main():
     run = True
 
-    # Map.create()
+    Map.create()
     Map.draw(win)
 
     spawnCreatures()
