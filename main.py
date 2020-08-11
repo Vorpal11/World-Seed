@@ -5,7 +5,7 @@ import os
 import random
 import math
 
-from constants import ASSETS, WIDTH, HEIGHT, GRIDSIZE
+from constants import ASSETS, WIDTH, HEIGHT, GRIDSIZE, GRASS
 from creatures import *
 from grass import *
 
@@ -17,36 +17,39 @@ clock = pygame.time.Clock()
 def draw_window(win):
     for h in range(HEIGHT // GRIDSIZE):
         for w in range(WIDTH // GRIDSIZE):
-            win.blit(ASSETS[0], (w * GRIDSIZE, h * GRIDSIZE))
-
+            win.blit(GRASS[random.randrange(0, 2)],
+                     (w * GRIDSIZE, h * GRIDSIZE))
 
 def main():
+    numGrass = 2500
+    numRabbit = 20
+    numFox = 20
+
     run = True
     rabbits = []
     foxs = []
     grasses = []
     grass_location = []
-    for i in range(WIDTH // GRIDSIZE):
+    for i in range(numRabbit):
         rabbits.append(Rabbit(random.randrange(0, WIDTH // GRIDSIZE) *
                               GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+    for i in range(numFox):
         foxs.append(Fox(random.randrange(0, WIDTH // GRIDSIZE) *
                         GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
-        grasses.append(Grass(random.randrange(0, WIDTH // GRIDSIZE) *
-                             GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
-        grass_location.append((grasses[i].x, grasses[i].y))
+    for i in range(numGrass):
+        pass
+        # grasses.append(Grass() *
+        # GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+        # grasses.append(Grass(random.randrange(0, WIDTH // GRIDSIZE) *
+        # GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
     while run:
-        clock.tick(10)
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run == False
                 pygame.quit()
                 quit()
         draw_window(win)
-        for grass in grasses:
-            x, y = grass.reproduce(grass_location)
-            if (x, y) != (-1, -1):
-                grasses.append(Grass(x, y))
-                grass_location.append((x, y))
         for grass in grasses:
             grass.draw(win)
 

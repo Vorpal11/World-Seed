@@ -8,20 +8,31 @@ class Creatures:
         self.foodneeded = 2
         self.reproduced = 0
 
-    def reproduce(self, x, y):
-        self.reproduced = 5
+    def reproduce(self):
+        if self.reproduced == 0 and foodneeded == 0:
+            self.reproduced = 5
+            return self.__class__(self.x, self.y)
 
     def move(self, dir):
         if self.reproduced <= 4:
             if dir == -2 and self.x > 0:
-                self.x -= 16
+                #left (self.x - 1, self.y)
+                self.x -= GRIDSIZE
             elif dir == -1 and self.x < WIDTH - GRIDSIZE:
-                self.x += 16
+                #right (self.x + 1, self.y)
+                self.x += GRIDSIZE
             elif dir == 1 and self.y > 0:
-                self.y += 16
+                # up (self.x, self.y + 1)
+                self.y -= GRIDSIZE
             elif dir == 2 and self.y < HEIGHT - GRIDSIZE:
-                self.y -= 16
-            return (self.x, self.y)
+                #Down (self.x, self.y - 1)
+                self.y += GRIDSIZE
+
+    def eat(self, creatureList):
+        self.foodneeded = 2
+        self.timeSinceFood = 0
+        if creatureList[0].id == id - 1:
+            return creatureList[0]
 
     def draw(self, win):
         win.blit(self.IMG, (self.x, self.y))
@@ -32,6 +43,7 @@ class Rabbit(Creatures):
         Creatures.__init__(self, *args)
         self.movesPerTurn = 1
         self.IMG = CREATURES[0]
+        self.id = 1
 
 
 class Fox(Creatures):
@@ -39,3 +51,4 @@ class Fox(Creatures):
         Creatures.__init__(self, *args)
         self.movesPerTurn = 2
         self.IMG = CREATURES[1]
+        self.id = 2
