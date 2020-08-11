@@ -69,7 +69,7 @@ def main():
                     run == False
                     pygame.quit()
                     quit()
-        Map.draw(win)
+        Map.iterate(win)
         pygame.display.update()
 
 
