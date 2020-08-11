@@ -1,3 +1,4 @@
+from Location import Location
 import pygame
 import os
 
@@ -7,16 +8,15 @@ class GridSquare:
 
     altered = []
 
-    def __init__(self, x, y, terrain_id=0):
+    def __init__(self, location, terrain_id=0):
         self.terrain = Terrain(terrain_id)
-        self.x = x * 16
-        self.y = y * 16
+        self.location = location
         self.creature_list = []
         GridSquare.altered.append(self)
         #print(len(GridSquare.altered))
 
     def draw(self, win):
-        win.blit(self.terrain.get_image_path(), (self.x, self.y))
+        win.blit(self.terrain.get_image_path(), self.location.get_coord_location())
         for creature in self.get_creature_list():
             creature.draw(win)
 
@@ -45,6 +45,7 @@ class GridSquare:
     @set_altered
     def add_creature(self, creature):
         self.creature_list.append(creature)
+        self.creature_list.sort(key=lambda x: x.id)
 
     # Remove a creature from the list of creatures currently on the square and
     # return true or false indicating if it was successful or not

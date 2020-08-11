@@ -1,4 +1,5 @@
 from Square import GridSquare
+from Location import Location
 from constants import WIDTH, HEIGHT, GRIDSIZE, SQUARECOUNT
 import math
 import random
@@ -13,7 +14,7 @@ class Map:
     @staticmethod
     def iterate(window):
         # I don't like this, resets too often
-        Map.draw(window)
+        # Map.draw(window)
         # Move is a special function, we need to draw things moved
         # off of and onto, but only eat/repro on things moved onto
         Map.move()
@@ -21,6 +22,8 @@ class Map:
         # assuming grass get switched around
         Map.eat()
         Map.reproduce()
+        # Might need to happen before moving?
+        Map.draw(window)
 
     @staticmethod
     def move():
@@ -31,10 +34,10 @@ class Map:
             print(gridSquare)
             creature_list = gridSquare.get_creature_list()
             for i, creature in enumerate(creature_list):
-                x, y = creature.x // 16, creature.y // 16
+                location = creature.location.get_location()
                 gridSquare.delete_creature(creature)
                 print(creature)
-                creature.move(Map.get_surrounding_squares(x, y))
+                creature.move(Map.get_surrounding_squares(location))
                 print(creature)
                 Map.update(creature)
 
@@ -47,18 +50,17 @@ class Map:
                 if eaten_creature:
                     gridSquare.delete_creature(eaten_creature)
 
-    # TODO: Can there be multiple things on the same square reproducing?
-    # if len(creature_list) != 1: continue ?
     @staticmethod
     def reproduce():
         for gridSquare in GridSquare.altered:
+
             # Do we need to copy creature_list? besides (potentially) grass, there
             # shouldn't be anything that would be able to reproduce on the
             # same turn that it is created, right?
-            creature_list = gridSquare.get_creature_list()[:]
-            if len(creature_list) > 1:
-                continue
-            for creature in creature_list:
+
+            # Might be needed if edit while looping error
+            # creature_list = gridSquare.get_creature_list()[:]
+            for creature in gridSquare.get_creature_list():
                 creature.reproduce()
 
     @staticmethod
@@ -71,25 +73,34 @@ class Map:
         if not isinstance(creature_container, (list, tuple)):
             creature_container = [creature_container]
         for creature in creature_container:
-            x = creature.x // 16
-            y = creature.y // 16
-            Map.map[y][x].add_creature(creature)
+            Map.get_location(creature.location).add_creature(creature)
 
     @staticmethod
-    def get_surrounding_squares(x, y):
+    def get_surrounding_squares(location):
+        x, y = location.get_location()
         output = [[], [], [], []]
+
         if x > 0:
-            output[0] = Map.get_location(x - 1, y).get_creature_list()
+            output[0] = Map.get_location(
+                Location(x - 1, y)).get_creature_list()
         if x < SQUARECOUNT - 1:
-            output[1] = Map.get_location(x + 1, y).get_creature_list()
+            output[1] = Map.get_location(
+                Location(x + 1, y)).get_creature_list()
         if y > 0:
-            output[2] = Map.get_location(x, y - 1).get_creature_list()
+            output[2] = Map.get_location(
+                Location(x, y - 1)).get_creature_list()
         if y > SQUARECOUNT - 1:
-            output[3] = Map.get_location(x, y + 1).get_creature_list()
+            output[3] = Map.get_location(
+                Location(x, y + 1)).get_creature_list()
+
         return output
 
     @staticmethod
-    def get_location(x, y):
+    def get_location(location):
+        x, y = location.get_location()
+        if x >= 0 or x < SQUARECOUNT or y >= 0 or y < SQUARECOUNT:
+            raise IndexError(
+                f"Tried to get a square out of bounds: ({x}, {y})")
         return Map.map[y][x]
 
     def __str__(self):
