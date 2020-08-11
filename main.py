@@ -1,3 +1,4 @@
+from Map import Map
 import pygame
 import time
 import os
@@ -18,7 +19,6 @@ def draw_window(win):
         for w in range(WIDTH // GRIDSIZE):
             win.blit(GRASS[random.randrange(0, 2)],
                      (w * GRIDSIZE, h * GRIDSIZE))
-
 
 def main():
     numGrass = 2500

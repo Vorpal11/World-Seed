@@ -39,13 +39,3 @@ class Grass:
 
     def draw(self, win):
         win.blit(self.IMG, (self.x, self.y))
-
-
-'''
-Creatures:
-
-
-Map:
-
-
-'''
