@@ -8,7 +8,7 @@ import os
 
 class Map:
 
-    map = [[GridSquare(x, y) for x in range(WIDTH // GRIDSIZE)]
+    map = [[GridSquare(Location(x, y)) for x in range(WIDTH // GRIDSIZE)]
            for y in range(HEIGHT // GRIDSIZE)]
 
     @staticmethod
@@ -98,7 +98,7 @@ class Map:
     @staticmethod
     def get_location(location):
         x, y = location.get_location()
-        if x >= 0 or x < SQUARECOUNT or y >= 0 or y < SQUARECOUNT:
+        if x < 0 or x >= SQUARECOUNT or y < 0 or y >= SQUARECOUNT:
             raise IndexError(
                 f"Tried to get a square out of bounds: ({x}, {y})")
         return Map.map[y][x]

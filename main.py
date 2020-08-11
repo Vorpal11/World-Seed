@@ -1,4 +1,5 @@
 from Map import Map
+from Location import Location
 import pygame
 import time
 import os
@@ -7,8 +8,6 @@ import math
 
 from constants import *
 from creatures import *
-from grass import *
-
 
 win = pygame.display.set_mode((WIDTH, HEIGHT), pygame.DOUBLEBUF, 32)
 clock = pygame.time.Clock()
@@ -29,25 +28,24 @@ gamerules = {
 
 def spawnCreatures():
     while gamerules["#Grass"] > 0:
-        gx, gy = (random.randrange(SQUARECOUNT),
-                  random.randrange(SQUARECOUNT))
-        rx, ry = (random.randrange(SQUARECOUNT),
-                  random.randrange(SQUARECOUNT))
-        fx, fy = (random.randrange(SQUARECOUNT),
-                  random.randrange(SQUARECOUNT))
+        gLocation = Location(random.randrange(SQUARECOUNT),
+                             random.randrange(SQUARECOUNT))
+        rLocation = Location(random.randrange(SQUARECOUNT),
+                             random.randrange(SQUARECOUNT))
+        fLocation = Location(random.randrange(SQUARECOUNT),
+                             random.randrange(SQUARECOUNT))
 
-        if gamerules["#Grass"] != 0 and Map.get_location(gx, gy).get_terrain().get_id() == 0:
-            Map.update(Grass(gx, gy))
+        if gamerules["#Grass"] != 0 and Map.get_location(gLocation).get_terrain().get_id() == 0:
+            Map.update(Grass(gLocation))
             gamerules["#Grass"] -= 1
 
-        if gamerules["#Rabbit"] != 0 and Map.get_location(gx, gy).get_terrain().get_id() == 0:
-            Map.update(Grass(rx, ry))
+        if gamerules["#Rabbit"] != 0 and Map.get_location(rLocation).get_terrain().get_id() == 0:
+            Map.update(Rabbit(rLocation))
             gamerules["#Rabbit"] -= 1
 
-        if gamerules["#Fox"] != 0 and Map.get_location(gx, gy).get_terrain().get_id() == 0:
-            Map.update(Grass(fx, fy))
+        if gamerules["#Fox"] != 0 and Map.get_location(fLocation).get_terrain().get_id() == 0:
+            Map.update(Fox(fLocation))
             gamerules["#Fox"] -= 1
-
 
 
 def main():
@@ -71,6 +69,7 @@ def main():
                     run == False
                     pygame.quit()
                     quit()
+        Map.draw(win)
         pygame.display.update()
 
 

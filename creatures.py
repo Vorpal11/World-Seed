@@ -1,9 +1,10 @@
 from constants import *
 from Location import *
+import random
 class Creatures:
 
-    def __init__(self, x, y):
-        pass
+    def __init__(self, location):
+        self.location = location
 
     def reproduce(self):
         pass
@@ -15,7 +16,7 @@ class Creatures:
         pass
 
     def draw(self, win):
-        win.blit(self.IMG, (self.x, self.y))
+        win.blit(self.IMG, self.location.get_coord_location())
 
 
 class Rabbit(Creatures):
@@ -38,3 +39,4 @@ class Grass(Creatures):
     def __init__(self, *args):
         Creatures.__init__(self, *args)
         self.IMG = GRASS[random.randrange(0, 2)]
+        self.id = 0
