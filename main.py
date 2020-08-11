@@ -43,7 +43,7 @@ def main():
         # grasses.append(Grass(random.randrange(0, WIDTH // GRIDSIZE) *
         # GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
     while run:
-        clock.tick(0.00000000000000000001)
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run == False

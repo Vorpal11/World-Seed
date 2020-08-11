@@ -7,6 +7,7 @@ class Grass:
         self.x = x
         self.y = y
         self.IMG = GRASS[random.randrange(0, 2)]
+        self.id = 0
 
     def reproduce(self, loc):
         directions = [0, 1, 2, 3]
@@ -33,5 +34,18 @@ class Grass:
 
             return (-1, -1)
 
+    def eat(self):
+        pass
+
     def draw(self, win):
         win.blit(self.IMG, (self.x, self.y))
+
+
+'''
+Creatures:
+
+
+Map:
+
+
+'''
