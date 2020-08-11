@@ -1,12 +1,11 @@
 import os
 import pygame
 
-
 GRIDSIZE = 16
+SQUARECOUNT = 50
 
-WIDTH = GRIDSIZE * 50
+WIDTH = GRIDSIZE * SQUARECOUNT
 HEIGHT = WIDTH
-
 
 ASSETS = [
     pygame.image.load(os.path.join("Assets", "LightDirt.png")),
