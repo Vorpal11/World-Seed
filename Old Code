@@ -1,0 +1,77 @@
+        for grass in grasses:
+            grass.draw(win)
+
+        for rabbit in rabbits:
+            rabbit.move(random.randrange(-2, 3))
+            rabbit.draw(win)
+
+        for fox in foxs:
+            fox.move(random.randrange(-2, 3))
+            fox.draw(win)
+
+
+
+for i in range(numGrass):
+        pass
+        # grasses.append(Grass() *
+        # GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+        # grasses.append(Grass(random.randrange(0, WIDTH // GRIDSIZE) *
+        # GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+
+
+
+
+    for i in range(numRabbit):
+        rabbits.append(Rabbit(random.randrange(0, WIDTH // GRIDSIZE) *
+                              GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+    for i in range(numFox):
+        foxs.append(Fox(random.randrange(0, WIDTH // GRIDSIZE) *
+                        GRIDSIZE, random.randrange(0, WIDTH // GRIDSIZE) * GRIDSIZE))
+
+
+    numGrass = 2500
+    numRabbit = 20
+    numFox = 20
+    rabbits = []
+    foxs = []
+    grasses = []
+    grass_location = []
+
+
+    def draw_window(win):
+    for h in range(HEIGHT // GRIDSIZE):
+        for w in range(WIDTH // GRIDSIZE):
+            win.blit(ASSETS[0]),
+                (w * GRIDSIZE, h * GRIDSIZE)
+
+--------------------------------------------------------------------------------------
+
+        self.timeSinceFood = 0
+        self.foodneeded = 2
+        self.reproduced = 0
+
+
+        if self.reproduced == 0 and foodneeded == 0:
+            self.reproduced = 5
+            return self.__class__(self.x, self.y)
+
+
+
+if self.reproduced <= 4:
+            if dir == -2 and self.x > 0:
+                #left (self.x - 1, self.y)
+                self.x -= GRIDSIZE
+            elif dir == -1 and self.x < WIDTH - GRIDSIZE:
+                #right (self.x + 1, self.y)
+                self.x += GRIDSIZE
+            elif dir == 1 and self.y > 0:
+                # up (self.x, self.y + 1)
+                self.y -= GRIDSIZE
+            elif dir == 2 and self.y < HEIGHT - GRIDSIZE:
+                #Down (self.x, self.y - 1)
+                self.y += GRIDSIZE
+
+self.foodneeded = 2
+        self.timeSinceFood = 0
+        if creatureList[0].id == id - 1:
+            return creatureList[0]

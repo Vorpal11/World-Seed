@@ -13,7 +13,7 @@ class GridSquare:
         self.y = y * 16
         self.creature_list = []
         GridSquare.altered.append(self)
-        print(len(GridSquare.altered))
+        #print(len(GridSquare.altered))
 
     def draw(self, win):
         win.blit(self.terrain.get_image_path(), (self.x, self.y))

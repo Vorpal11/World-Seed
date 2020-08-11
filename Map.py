@@ -7,7 +7,8 @@ import os
 
 class Map:
 
-    map = [[GridSquare(x, y) for x in range(WIDTH // GRIDSIZE)] for y in range(HEIGHT // GRIDSIZE)]
+    map = [[GridSquare(x, y) for x in range(WIDTH // GRIDSIZE)]
+           for y in range(HEIGHT // GRIDSIZE)]
 
     @staticmethod
     def iterate(window):
@@ -23,9 +24,9 @@ class Map:
 
     @staticmethod
     def move():
-#        Backup - set before iterating, through set when iterating should be the same
-#        altered = GridSquare.reset_altered()
-#        for gridSquare in altered:
+        #        Backup - set before iterating, through set when iterating should be the same
+        #        altered = GridSquare.reset_altered()
+        #        for gridSquare in altered:
         for gridSquare in GridSquare.reset_altered():
             print(gridSquare)
             creature_list = gridSquare.get_creature_list()
@@ -43,7 +44,8 @@ class Map:
             creature_list = gridSquare.get_creature_list()[:]
             for creature in creature_list:
                 eaten_creature = creature.eat(gridSquare.get_creature_list())
-                if eaten_creature: gridSquare.delete_creature(eaten_creature)
+                if eaten_creature:
+                    gridSquare.delete_creature(eaten_creature)
 
     # TODO: Can there be multiple things on the same square reproducing?
     # if len(creature_list) != 1: continue ?
@@ -54,7 +56,8 @@ class Map:
             # shouldn't be anything that would be able to reproduce on the
             # same turn that it is created, right?
             creature_list = gridSquare.get_creature_list()[:]
-            if len(creature_list) > 1: continue
+            if len(creature_list) > 1:
+                continue
             for creature in creature_list:
                 creature.reproduce()
 
@@ -75,10 +78,14 @@ class Map:
     @staticmethod
     def get_surrounding_squares(x, y):
         output = [[], [], [], []]
-        if x > 0:               output[0] = Map.get_location(x - 1, y).get_creature_list()
-        if x < SQUARECOUNT - 1: output[1] = Map.get_location(x + 1, y).get_creature_list()
-        if y > 0:               output[2] = Map.get_location(x, y - 1).get_creature_list()
-        if y > SQUARECOUNT - 1: output[3] = Map.get_location(x, y + 1).get_creature_list()
+        if x > 0:
+            output[0] = Map.get_location(x - 1, y).get_creature_list()
+        if x < SQUARECOUNT - 1:
+            output[1] = Map.get_location(x + 1, y).get_creature_list()
+        if y > 0:
+            output[2] = Map.get_location(x, y - 1).get_creature_list()
+        if y > SQUARECOUNT - 1:
+            output[3] = Map.get_location(x, y + 1).get_creature_list()
         return output
 
     @staticmethod
@@ -88,7 +95,8 @@ class Map:
     def __str__(self):
         output = ""
         for row in self.map:
-            output += " ".join([gridSquare.get_terrain() for gridSquare in row])
+            output += " ".join([gridSquare.get_terrain()
+                                for gridSquare in row])
             output += "\n"
         return output
 
@@ -97,9 +105,12 @@ class Map:
     @staticmethod
     def generate_struct(number_of_structs, terrain_id, min_count, max_count, threshold, count=0):
         for i in range(number_of_structs):
-            initial_location = [random.randrange(0, SQUARECOUNT), random.randrange(0, SQUARECOUNT)]
-            Map.grow_struct(initial_location, terrain_id, min_count, max_count, threshold)
-            print(f"X: {initial_location[0]}, Y: {initial_location[1]}, ID: {terrain_id}")
+            initial_location = [random.randrange(
+                0, SQUARECOUNT), random.randrange(0, SQUARECOUNT)]
+            Map.grow_struct(initial_location, terrain_id,
+                            min_count, max_count, threshold)
+            print(
+                f"X: {initial_location[0]}, Y: {initial_location[1]}, ID: {terrain_id}")
 
     @staticmethod
     def grow_struct(initial_location, terrain_id, min_count, max_count, threshold, count=0):
@@ -111,10 +122,11 @@ class Map:
                 location = initial_location[:]
                 location[0] += i
                 location[1] += j
-                square = Map.get_location(location)
+                square = Map.get_location(location[0], location[1])
                 terrain = square.get_terrain().get_id()
                 # If about to touch a different type of terrain, return
-                if terrain not in [0, terrain_id]: return False
+                if terrain not in [0, terrain_id]:
+                    return False
 
                 if abs(i) < 2 and abs(j) < 2:
                     # Add everything within a 2x2 area
@@ -123,10 +135,12 @@ class Map:
         # For each square within a 2x2 area
         for square, location in surrounding_squares:
             # Randomly skip, if about min count, or skip if above max count
-            if ( random.random() < threshold and count > min_count ) or count > max_count: continue
+            if (random.random() < threshold and count > min_count) or count > max_count:
+                continue
             square.set_terrain(terrain_id)
             # Recursively grow for each block, and return false if it ends early
-            if Map.grow_struct(location, terrain_id, min_count, max_count, threshold,  count) == False: return True
+            if Map.grow_struct(location, terrain_id, min_count, max_count, threshold,  count) == False:
+                return True
         return True
 
     # Generates valleys onto the map
