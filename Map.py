@@ -82,16 +82,16 @@ class Map:
 
         if x > 0:
             output[0] = Map.get_location(
-                Location(x - 1, y)).get_creature_list()
+                Location(x - 1, y))
         if x < SQUARECOUNT - 1:
             output[1] = Map.get_location(
-                Location(x + 1, y)).get_creature_list()
+                Location(x + 1, y))
         if y > 0:
             output[2] = Map.get_location(
-                Location(x, y - 1)).get_creature_list()
+                Location(x, y - 1))
         if y > SQUARECOUNT - 1:
             output[3] = Map.get_location(
-                Location(x, y + 1)).get_creature_list()
+                Location(x, y + 1))
 
         return output
 
@@ -116,12 +116,10 @@ class Map:
     @staticmethod
     def generate_struct(number_of_structs, terrain_id, min_count, max_count, threshold, count=0):
         for i in range(number_of_structs):
-            initial_location = [random.randrange(
-                0, SQUARECOUNT), random.randrange(0, SQUARECOUNT)]
+            initial_location = Location(random.randrange(
+                0, SQUARECOUNT - 1), random.randrange(0, SQUARECOUNT - 1))
             Map.grow_struct(initial_location, terrain_id,
                             min_count, max_count, threshold)
-            print(
-                f"X: {initial_location[0]}, Y: {initial_location[1]}, ID: {terrain_id}")
 
     @staticmethod
     def grow_struct(initial_location, terrain_id, min_count, max_count, threshold, count=0):
@@ -131,6 +129,8 @@ class Map:
         for i in [-2, -1, 0, 1, 2]:
             for j in [-2, -1, 0, 1, 2]:
                 location = initial_location + (i, j)
+                if location.get_x() < 0 or location.get_x() >= SQUARECOUNT or location.get_y() < 0 or location.get_y() >= SQUARECOUNT:
+                    continue
                 square = Map.get_location(location)
                 terrain = square.get_terrain().get_id()
                 # If about to touch a different type of terrain, return
