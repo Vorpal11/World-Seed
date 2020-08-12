@@ -13,10 +13,11 @@ class GridSquare:
         self.location = location
         self.creature_list = []
         GridSquare.altered.append(self)
-        #print(len(GridSquare.altered))
+        # print(len(GridSquare.altered))
 
     def draw(self, win):
-        win.blit(self.terrain.get_image_path(), self.location.get_coord_location())
+        win.blit(self.terrain.get_image_path(),
+                 self.location.get_coord_location())
         for creature in self.get_creature_list():
             creature.draw(win)
 
@@ -40,8 +41,8 @@ class GridSquare:
             return func(self, *args, **kwargs)
         return inner
 
-
     # Adds a creature to the list of cretures currently on the square
+
     @set_altered
     def add_creature(self, creature):
         self.creature_list.append(creature)
@@ -52,7 +53,8 @@ class GridSquare:
     # TODO: Add and sort each time
     @set_altered
     def delete_creature(self, creature):
-        if creature not in self.creature_list: return False
+        if creature not in self.creature_list:
+            return False
         self.creature_list.remove(creature)
 
     # Get the list of creatures currently on a sqaure
@@ -61,35 +63,39 @@ class GridSquare:
 
     # Sets the terrain of the square to a new type using the terrainid
     def set_terrain(self, terrain_id):
-        if self.terrain.get_id() == terrain_id: return
+        if self.terrain.get_id() == terrain_id:
+            return
         self.terrain = Terrain(terrain_id)
 
     # Gets the terrain item in the current square
     def get_terrain(self):
         return self.terrain
 
+
 class Terrain:
     # TODO: Make this into a list of constants to reduce the generation
     # and storage overhead
 
-    TERRAIN_NAMES = ( "dirt", "water", "valley", "tree", "volcano" )
+    TERRAIN_NAMES = ("ligthdirt", "darkdirt", "water",
+                     "valley", "tree", "volcano")
 
     # Could be individual elements instead of a 2d array
     # possiblity for random choice
     TERRAIN_PATHS = (
-            (pygame.image.load(os.path.join("Assets", "LightDirt.png"))), # Dirt
-            (pygame.image.load(os.path.join("Assets", "LightWater.png"))), # Water
-            (pygame.image.load(os.path.join("Assets", "Valley.png"))), # Valley
-            (pygame.image.load(os.path.join("Assets", "Rabbit.png"))), # Tree
-            (pygame.image.load(os.path.join("Assets", "foxidle1.png"))) # Volcano
-#    pygame.image.load(os.path.join("Assets", "LightDirt.png")),
-#    pygame.image.load(os.path.join("Assets", "DarkDirt.png")),
-#    pygame.image.load(os.path.join("Assets", "LighGrass.png")),
-#    pygame.image.load(os.path.join("Assets", "DarkGrass.png")),
-#    pygame.image.load(os.path.join("Assets", "LightWater.png")),
-#    pygame.image.load(os.path.join("Assets", "Valley.png")),
-#    pygame.image.load(os.path.join("Assets", "Rabbit.png")),
-#    pygame.image.load(os.path.join("Assets", "foxidle1.png"))
+        (pygame.image.load(os.path.join("Assets", "LightDirt.png"))),  # Dirt
+        (pygame.image.load(os.path.join("Assets", "DarkDirt.png"))),  # Dirt
+        (pygame.image.load(os.path.join("Assets", "LightWater.png"))),  # Water
+        (pygame.image.load(os.path.join("Assets", "Valley.png"))),  # Valley
+        (pygame.image.load(os.path.join("Assets", "Rabbit.png"))),  # Tree
+        (pygame.image.load(os.path.join("Assets", "foxidle1.png")))  # Volcano
+        #    pygame.image.load(os.path.join("Assets", "LightDirt.png")),
+        #    pygame.image.load(os.path.join("Assets", "DarkDirt.png")),
+        #    pygame.image.load(os.path.join("Assets", "LighGrass.png")),
+        #    pygame.image.load(os.path.join("Assets", "DarkGrass.png")),
+        #    pygame.image.load(os.path.join("Assets", "LightWater.png")),
+        #    pygame.image.load(os.path.join("Assets", "Valley.png")),
+        #    pygame.image.load(os.path.join("Assets", "Rabbit.png")),
+        #    pygame.image.load(os.path.join("Assets", "foxidle1.png"))
     )
 
     # Sets a name and image path based on the given terrain id
@@ -104,5 +110,3 @@ class Terrain:
     def get_image_path(self): return self.image_path
     # Returns the terrain id of the current square
     def get_id(self): return self.terrain_id
-
-

@@ -1,5 +1,6 @@
 import os
 import pygame
+import random
 
 GRIDSIZE = 16
 SQUARECOUNT = 50
@@ -7,18 +8,23 @@ SQUARECOUNT = 50
 WIDTH = GRIDSIZE * SQUARECOUNT
 HEIGHT = WIDTH
 
-ASSETS = [
-    pygame.image.load(os.path.join("Assets", "LightDirt.png")),
-    pygame.image.load(os.path.join("Assets", "DarkDirt.png")),
-    pygame.image.load(os.path.join("Assets", "LightWater.png")),
-    pygame.image.load(os.path.join("Assets", "Valley.png")),
+
+def load(file_name):
+    return pygame.image.load(os.path.join("Assets", file_name))
+
+
+TERRAIN = [
+    [load("LightDirt.png"), load("DarkDirt.png")],
+    [load("DarkWater.png"), load("LightWater.png")],
+    [load("Valley.png")]
+
 ]
 CREATURES = [
-    pygame.image.load(os.path.join("Assets", "Rabbit.png")),
-    pygame.image.load(os.path.join("Assets", "foxidle1.png"))
+    load("Rabbit.png"),
+    load("foxidle1.png")
 ]
 
 GRASS = [
-    pygame.image.load(os.path.join("Assets", "LighGrass.png")),
-    pygame.image.load(os.path.join("Assets", "DarkGrass.png")),
+    load("LightGrass.png"),
+    load("DarkGrass.png")
 ]

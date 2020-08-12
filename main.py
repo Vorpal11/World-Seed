@@ -35,17 +35,24 @@ def spawnCreatures():
         fLocation = Location(random.randrange(SQUARECOUNT),
                              random.randrange(SQUARECOUNT))
 
-        if gamerules["#Grass"] != 0 and Map.get_location(gLocation).get_terrain().get_id() == 0:
-            Map.update(Grass(gLocation))
-            gamerules["#Grass"] -= 1
+        if gamerules["#Grass"] != 0:
+            gridSquare = Map.get_location(gLocation)
+            if gridSquare.get_terrain().get_id() == 0 and gridSquare.get_terrain().get_sub_id() == 0 and len(gridSquare.get_creature_list()) == 0:
+                Map.update(Grass(gLocation))
+                print(f"GRASSSSSSSS {gridSquare}")
+                gamerules["#Grass"] -= 1
 
-        if gamerules["#Rabbit"] != 0 and Map.get_location(rLocation).get_terrain().get_id() == 0:
-            Map.update(Rabbit(rLocation))
-            gamerules["#Rabbit"] -= 1
+        if gamerules["#Rabbit"] != 0:
+            gridSquare = Map.get_location(rLocation)
+            if gridSquare.get_terrain().get_id() == 0 and len(gridSquare.get_creature_list()) == 0:
+                Map.update(Rabbit(rLocation))
+                gamerules["#Rabbit"] -= 1
 
-        if gamerules["#Fox"] != 0 and Map.get_location(fLocation).get_terrain().get_id() == 0:
-            Map.update(Fox(fLocation))
-            gamerules["#Fox"] -= 1
+        if gamerules["#Fox"] != 0:
+            gridSquare = Map.get_location(fLocation)
+            if gridSquare.get_terrain().get_id() == 0 and len(gridSquare.get_creature_list()) == 0:
+                Map.update(Fox(fLocation))
+                gamerules["#Fox"] -= 1
 
 
 def main():

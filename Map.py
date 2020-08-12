@@ -1,4 +1,5 @@
-from Square import GridSquare
+from GridSquare import GridSquare
+from Terrain import Terrain
 from Location import Location
 from constants import WIDTH, HEIGHT, GRIDSIZE, SQUARECOUNT
 import math
@@ -7,6 +8,8 @@ import pygame
 import os
 
 class Map:
+
+    spawnable = set()
 
     map = [[GridSquare(Location(x, y)) for x in range(WIDTH // GRIDSIZE)]
            for y in range(HEIGHT // GRIDSIZE)]
@@ -27,16 +30,16 @@ class Map:
 
     @staticmethod
     def move():
-        #        Backup - set before iterating, through set when iterating should be the same
-        #        altered = GridSquare.reset_altered()
-        #        for gridSquare in altered:
+        # Backup - set before iterating, through set when iterating should be the same
+        # altered = GridSquare.reset_altered()
+        # for gridSquare in altered:
         for gridSquare in GridSquare.reset_altered():
             creature_list = gridSquare.get_creature_list()
             for i, creature in enumerate(creature_list):
                 location = creature.location
                 gridSquare.delete_creature(creature)
-                creature.move(Map.get_surrounding_squares(location))
-                Map.update(creature)
+                if creature.move(Map.get_surrounding_squares(location)):
+                    Map.update(creature)
 
     @staticmethod
     def eat():
@@ -49,7 +52,7 @@ class Map:
 
     @staticmethod
     def reproduce():
-        for gridSquare in GridSquare.altered:
+        for gridSquare in GridSquare.altered[:]:
 
             # Do we need to copy creature_list? besides (potentially) grass, there
             # shouldn't be anything that would be able to reproduce on the
@@ -58,7 +61,8 @@ class Map:
             # Might be needed if edit while looping error
             # creature_list = gridSquare.get_creature_list()[:]
             for creature in gridSquare.get_creature_list():
-                creature.reproduce()
+                location = creature.location
+                creature.reproduce(Map.get_surrounding_squares(location))
 
     @staticmethod
     def draw(window):
@@ -86,9 +90,11 @@ class Map:
         if y > 0:
             output[2] = Map.get_location(
                 Location(x, y - 1))
-        if y > SQUARECOUNT - 1:
+        if y < SQUARECOUNT - 1:
             output[3] = Map.get_location(
                 Location(x, y + 1))
+
+        # print(output)
 
         return output
 
@@ -123,30 +129,48 @@ class Map:
         count += 1
         surrounding_squares = []
         # Check a 3x3 radius around the current square
-        for i in [-2, -1, 0, 1, 2]:
-            for j in [-2, -1, 0, 1, 2]:
+        directions = [0]
+        for i in range(3):
+            directions += [-i, i]
+
+        for i in directions:
+            for j in directions:
                 location = initial_location + (i, j)
                 if location.get_x() < 0 or location.get_x() >= SQUARECOUNT or location.get_y() < 0 or location.get_y() >= SQUARECOUNT:
                     continue
                 square = Map.get_location(location)
                 terrain = square.get_terrain().get_id()
+
                 # If about to touch a different type of terrain, return
-                if terrain not in [0, terrain_id]:
+                if terrain == terrain_id:
+                    continue
+                if terrain_id == 1:
+                    Map.spawnable.add(square)
+                if terrain != 0:
                     return False
 
-                if abs(i) < 2 and abs(j) < 2:
+                if abs(i) < 3 and abs(j) < 3:
                     # Add everything within a 2x2 area
                     surrounding_squares.append((square, location))
+#                else:
+#                    if terrain_id == 1:
+#                        Map.spawnable.add(square)
 
         # For each square within a 2x2 area
         for square, location in surrounding_squares:
             # Randomly skip, if about min count, or skip if above max count
-            if (random.random() < threshold and count > min_count) or count > max_count:
+            if (random.random() < threshold and count > min_count) or count > max_count or square.get_terrain().get_id() == terrain_id:
                 continue
-            square.set_terrain(terrain_id)
+            if terrain_id == 1 and count <= min_count:
+                square.set_terrain(terrain_id, 1)
+            else:
+                square.set_terrain(terrain_id)
+
+            if square in Map.spawnable:
+                Map.spawnable.remove(square)
             # Recursively grow for each block, and return false if it ends early
-            if Map.grow_struct(location, terrain_id, min_count, max_count, threshold,  count) == False:
-                return True
+            if Map.grow_struct(location, terrain_id, min_count, max_count, threshold, count) == False:
+                return False
         return True
 
     # Generates valleys onto the map
@@ -156,10 +180,13 @@ class Map:
 
     # Generates lakes onto the map
     @staticmethod
-    def generate_lakes(lake_count=5):
-        Map.generate_struct(lake_count, 1, 5, 10, 0.94)
+    def generate_lakes(lake_count=4):
+        Map.generate_struct(lake_count, 1, 4, 8, 0.9)
 
     @staticmethod
     def create():
         Map.generate_lakes()
         Map.generate_valleys()
+
+        for sq in Map.spawnable:
+            sq.terrain = Terrain(0, 1)
