@@ -9,9 +9,10 @@ class Creatures:
 
     def move(self, surroundings):
         direction = self.get_direction()
-
-        if surroundings[direction] != [] and surroundings[direction].get_terrain() == 0:
-            self.location = Location(surroundings[direction].get_location())
+        if surroundings[direction] == []:
+            return
+        elif surroundings[direction].get_terrain().get_id() == 0:
+            self.location = surroundings[direction].location
 
     def eat(self, creatureList):
         if self.id - 1 == creatureList[0].id:
@@ -54,3 +55,9 @@ class Grass(Creatures):
 
     def get_direction(self):
         return random.randrange(0, 4)
+
+    def move(self, surroundings):
+        pass
+
+    def reproduce(self):
+        pass

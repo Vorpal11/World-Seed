@@ -31,14 +31,11 @@ class Map:
         #        altered = GridSquare.reset_altered()
         #        for gridSquare in altered:
         for gridSquare in GridSquare.reset_altered():
-            print(gridSquare)
             creature_list = gridSquare.get_creature_list()
             for i, creature in enumerate(creature_list):
                 location = creature.location
                 gridSquare.delete_creature(creature)
-                print(creature)
                 creature.move(Map.get_surrounding_squares(location))
-                print(creature)
                 Map.update(creature)
 
     @staticmethod
