@@ -21,10 +21,13 @@ TERRAIN = [
 ]
 CREATURES = [
     load("Rabbit.png"),
-    load("foxidle1.png")
+    load("Fox.png")
 ]
 
 GRASS = [
     load("LightGrass.png"),
     load("DarkGrass.png")
+]
+ASSETS = [
+    load("text-background.png")
 ]
