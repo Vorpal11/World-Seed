@@ -23,9 +23,14 @@ class Location:
 
     def __add__(self, other):
         if isinstance(other, Location):
-            self._x += other._x
-            self._y += other._y
             return Location(self._x + other._x, self._y + other._y)
         else:
             if len(other) != 2: raise Exception('Error adding to Location')
             return Location(self._x + other[0], self._y + other[1])
+
+    def __sub__(self, other):
+        if isinstance(other, Location):
+            return Location(self._x - other._x, self._y - other._y)
+        else:
+            if len(other) != 2: raise Exception('Error adding to Location')
+            return Location(self._x - other[0], self._y - other[1])

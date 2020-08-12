@@ -72,12 +72,13 @@ class Terrain:
     # TODO: Make this into a list of constants to reduce the generation
     # and storage overhead
 
-    TERRAIN_NAMES = ( "dirt", "water", "valley", "tree", "volcano" )
+    TERRAIN_NAMES = ( "ligthdirt", "darkdirt", "water", "valley", "tree", "volcano" )
 
     # Could be individual elements instead of a 2d array
     # possiblity for random choice
     TERRAIN_PATHS = (
             (pygame.image.load(os.path.join("Assets", "LightDirt.png"))), # Dirt
+            (pygame.image.load(os.path.join("Assets", "DarkDirt.png"))), # Dirt
             (pygame.image.load(os.path.join("Assets", "LightWater.png"))), # Water
             (pygame.image.load(os.path.join("Assets", "Valley.png"))), # Valley
             (pygame.image.load(os.path.join("Assets", "Rabbit.png"))), # Tree
