@@ -13,28 +13,28 @@ class GridSquare:
         self.terrain = Terrain(terrain_id, sub_terrain_id)
         self.location = location
         self.creature_list = []
+        # Update self when first displayed
         GridSquare.altered.append(self)
-        # print(len(GridSquare.altered))
 
     def draw(self, win):
-        win.blit(self.terrain.get_image_path(),
+        # Draw own texture, then all creatures (Grass -> Rabbit -> Fox)
+        win.blit(self.terrain.image_path,
                  self.location.get_coord_location())
-        for creature in self.get_creature_list():
+        for creature in self.creature_list:
             creature.draw(win)
 
     # Return the name of the terrain currently in the square
     def __str__(self):
         return f"{self.__repr__()} : {len(self.creature_list)}"
 
-#    def __repr__(self):
-#        return ', '.join([str(c) for c in self.get_creature_list()])
-
+    # Reset list of altered squares, and return it
     @staticmethod
     def reset_altered():
         altered = GridSquare.altered[:]
         GridSquare.altered = []
         return altered
 
+    # Add a square to list of altered sqaures
     def set_altered(func):
         def inner(self, *args, **kwargs):
             if self not in GridSquare.altered:
@@ -42,8 +42,7 @@ class GridSquare:
             return func(self, *args, **kwargs)
         return inner
 
-    # Adds a creature to the list of cretures currently on the square
-
+    # Add a creature to the square and sort by id (0 -> 1 -> 2)
     @set_altered
     def add_creature(self, creature):
         self.creature_list.append(creature)
@@ -51,23 +50,15 @@ class GridSquare:
 
     # Remove a creature from the list of creatures currently on the square and
     # return true or false indicating if it was successful or not
-    # TODO: Add and sort each time
     @set_altered
     def delete_creature(self, creature):
         if creature not in self.creature_list:
             return False
         self.creature_list.remove(creature)
+        return True
 
-    # Get the list of creatures currently on a sqaure
-    def get_creature_list(self):
-        return self.creature_list
-
-    # Sets the terrain of the square to a new type using the terrainid
+    # Sets the terrain of the square to a new type using the terrainid and subterrain id
     def set_terrain(self, terrain_id, sub_terrain_id=0):
-        if self.terrain.get_id() == terrain_id and self.get_terrain().get_sub_id() == sub_terrain_id:
+        if self.terrain.terrain_id == terrain_id and self.terrain.sub_id == sub_terrain_id:
             return
         self.terrain = Terrain(terrain_id, sub_terrain_id)
-
-    # Gets the terrain item in the current square
-    def get_terrain(self):
-        return self.terrain
