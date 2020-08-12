@@ -1,4 +1,5 @@
-from Square import GridSquare, Terrain
+from GridSquare import GridSquare
+from Terrain import Terrain
 from Location import Location
 from constants import WIDTH, HEIGHT, GRIDSIZE, SQUARECOUNT
 import math
@@ -29,19 +30,16 @@ class Map:
 
     @staticmethod
     def move():
-        #        Backup - set before iterating, through set when iterating should be the same
-        #        altered = GridSquare.reset_altered()
-        #        for gridSquare in altered:
+        # Backup - set before iterating, through set when iterating should be the same
+        # altered = GridSquare.reset_altered()
+        # for gridSquare in altered:
         for gridSquare in GridSquare.reset_altered():
-            #print(gridSquare)
             creature_list = gridSquare.get_creature_list()
             for i, creature in enumerate(creature_list):
                 location = creature.location
                 gridSquare.delete_creature(creature)
-                #print(creature)
-                creature.move(Map.get_surrounding_squares(location))
-                #print(creature)
-                Map.update(creature)
+                if creature.move(Map.get_surrounding_squares(location)):
+                    Map.update(creature)
 
     @staticmethod
     def eat():
@@ -54,7 +52,7 @@ class Map:
 
     @staticmethod
     def reproduce():
-        for gridSquare in GridSquare.altered:
+        for gridSquare in GridSquare.altered[:]:
 
             # Do we need to copy creature_list? besides (potentially) grass, there
             # shouldn't be anything that would be able to reproduce on the
@@ -63,7 +61,8 @@ class Map:
             # Might be needed if edit while looping error
             # creature_list = gridSquare.get_creature_list()[:]
             for creature in gridSquare.get_creature_list():
-                creature.reproduce()
+                location = creature.location
+                creature.reproduce(Map.get_surrounding_squares(location))
 
     @staticmethod
     def draw(window):
@@ -144,24 +143,25 @@ class Map:
 
                 # If about to touch a different type of terrain, return
                 if terrain == terrain_id: continue
-                if terrain_id == 2:
+                if terrain_id == 1:
                     Map.spawnable.add(square)
-                if terrain != 0 and terrain != 3: return False
+                if terrain != 0: return False
 
                 if abs(i) < 3 and abs(j) < 3:
                     # Add everything within a 2x2 area
                     surrounding_squares.append((square, location))
-#                else:
-#                    if terrain_id == 1:
-#                        Map.spawnable.add(square)
 
         # For each square within a 2x2 area
         for square, location in surrounding_squares:
             # Randomly skip, if about min count, or skip if above max count
-            if (random.random() < threshold and count > min_count) or count > max_count:
+            if (random.random() < threshold and count > min_count) or count > max_count or square.get_terrain().get_id() == terrain_id:
                 continue
+            if terrain_id == 1 and count <= min_count:
+                square.set_terrain(terrain_id, 1)
+            else:
+                square.set_terrain(terrain_id)
+
             if square in Map.spawnable: Map.spawnable.remove(square)
-            square.set_terrain(terrain_id)
             # Recursively grow for each block, and return false if it ends early
             if Map.grow_struct(location, terrain_id, min_count, max_count, threshold, count) == False:
                 return False
@@ -170,12 +170,12 @@ class Map:
     # Generates valleys onto the map
     @staticmethod
     def generate_valleys(valley_count=2):
-        Map.generate_struct(valley_count, 3, 2, 4, 0.8)
+        Map.generate_struct(valley_count, 2, 2, 4, 0.8)
 
     # Generates lakes onto the map
     @staticmethod
     def generate_lakes(lake_count=4):
-        Map.generate_struct(lake_count, 2, 4, 8, 0.9)
+        Map.generate_struct(lake_count, 1, 4, 8, 0.9)
 
     @staticmethod
     def create():
@@ -183,4 +183,4 @@ class Map:
         Map.generate_valleys()
 
         for sq in Map.spawnable:
-            sq.terrain = Terrain(1)
+            sq.terrain = Terrain(0, 1)
