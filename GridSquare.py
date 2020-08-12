@@ -1,4 +1,5 @@
 from Location import Location
+from Terrain import Terrain
 import pygame
 import os
 
@@ -8,8 +9,8 @@ class GridSquare:
 
     altered = []
 
-    def __init__(self, location, terrain_id=0):
-        self.terrain = Terrain(terrain_id)
+    def __init__(self, location, terrain_id=0, sub_terrain_id=0):
+        self.terrain = Terrain(terrain_id, sub_terrain_id)
         self.location = location
         self.creature_list = []
         GridSquare.altered.append(self)
@@ -60,50 +61,10 @@ class GridSquare:
         return self.creature_list
 
     # Sets the terrain of the square to a new type using the terrainid
-    def set_terrain(self, terrain_id):
+    def set_terrain(self, terrain_id, sub_terrain_id=0):
         if self.terrain.get_id() == terrain_id: return
-        self.terrain = Terrain(terrain_id)
+        self.terrain = Terrain(terrain_id, sub_terrain_id)
 
     # Gets the terrain item in the current square
     def get_terrain(self):
         return self.terrain
-
-class Terrain:
-    # TODO: Make this into a list of constants to reduce the generation
-    # and storage overhead
-
-    TERRAIN_NAMES = ( "ligthdirt", "darkdirt", "water", "valley", "tree", "volcano" )
-
-    # Could be individual elements instead of a 2d array
-    # possiblity for random choice
-    TERRAIN_PATHS = (
-            (pygame.image.load(os.path.join("Assets", "LightDirt.png"))), # Dirt
-            (pygame.image.load(os.path.join("Assets", "DarkDirt.png"))), # Dirt
-            (pygame.image.load(os.path.join("Assets", "LightWater.png"))), # Water
-            (pygame.image.load(os.path.join("Assets", "Valley.png"))), # Valley
-            (pygame.image.load(os.path.join("Assets", "Rabbit.png"))), # Tree
-            (pygame.image.load(os.path.join("Assets", "foxidle1.png"))) # Volcano
-#    pygame.image.load(os.path.join("Assets", "LightDirt.png")),
-#    pygame.image.load(os.path.join("Assets", "DarkDirt.png")),
-#    pygame.image.load(os.path.join("Assets", "LighGrass.png")),
-#    pygame.image.load(os.path.join("Assets", "DarkGrass.png")),
-#    pygame.image.load(os.path.join("Assets", "LightWater.png")),
-#    pygame.image.load(os.path.join("Assets", "Valley.png")),
-#    pygame.image.load(os.path.join("Assets", "Rabbit.png")),
-#    pygame.image.load(os.path.join("Assets", "foxidle1.png"))
-    )
-
-    # Sets a name and image path based on the given terrain id
-    def __init__(self, terrain_id):
-        self.terrain_id = terrain_id
-        self.name = Terrain.TERRAIN_NAMES[terrain_id]
-        self.image_path = Terrain.TERRAIN_PATHS[self.terrain_id]
-
-    # Returns the terrains stringified name
-    def get_name(self): return self.name
-    # Returns the pygame image of the current terrain
-    def get_image_path(self): return self.image_path
-    # Returns the terrain id of the current square
-    def get_id(self): return self.terrain_id
-
-
